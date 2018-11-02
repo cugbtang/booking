@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">场地管理</a>
+        <a>
+          <cite>场地列表</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" id="refresh" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body">
+    <xblock>
+        <button class="layui-btn" onclick="x_admin_show('添加用户','/room/add')"><i class="layui-icon"></i>添加</button>
+    </xblock>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>id</th>
+            <th>名称</th>
+            <th>座位数</th>
+            <th>其他说明</th>
+            <th>借用开始时间</th>
+            <th>借用结束时间</th>
+            <th>修改时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range $index, $elem := .Room}}
+        <tr>
+            <td>{{$index}}</td>
+            <td>{{$elem.RoomId}}</td>
+            <td>{{$elem.Name}}</td>
+            <td>{{$elem.PosNum}}</td>
+            <td>{{$elem.Desc}}</td>
+            <td>{{$elem.StartTime}}</td>
+            <td>{{$elem.EndTime}}</td>
+            <td>{{$elem.UpdateTime}}</td>
+            <td>
+                <div>
+                {{if eq $elem.Status 1}}
+                    <input onclick="change({{$elem.RoomId}},2)"
+                           class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" value="停止借用">
+                {{else}}
+                    <input onclick="change({{$elem.RoomId}},1)"
+                           class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs" value="开始借用">
+                {{end}}
+                </div>
+            </td>
+            <td class="td-manage">
+                <a title="查看" onclick="x_admin_show('编辑','/room/update/{{$elem.RoomId}}')" href="javascript:;">
+                    <i class="layui-icon">&#xe63c;</i>
+                </a>
+                <a title="删除" onclick="member_del(this,{{$elem.RoomId}})" href="javascript:;">
+                    <i class="layui-icon">&#xe640;</i>
+                </a>
+            </td>
+        </tr>
+        {{end}}
+
+        </tbody>
+    </table>
+</div>
+<script>
+    /*用户-删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            //发异步删除数据
+            $.post("/room/delete", {room_id: id}, function (res) {
+                layer.msg(res.msg, {icon: 1, time: 1000});
+                if (res.status == 1) {
+                    $(obj).parents("tr").remove();
+                }
+            })
+            document.frames.location.reload()
+        });
+    }
+
+    function change(id, status) {
+        layer.confirm('确认要修改吗？', function (index) {
+            //发异步删除数据
+            $.post("/room/update", {room_id: id, status: status}, function (res) {
+                layer.msg(res.msg, {icon: 1, time: 1000});
+            })
+            document.frames.location.reload()
+        });
+    }
+</script>
+</body>
+
+</html>

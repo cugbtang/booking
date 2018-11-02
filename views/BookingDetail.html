@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+</head>
+
+<body>
+
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>项目</th>
+        <th>内容</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>id</td>
+        <td>{{.data.BookingId}}</td>
+    </tr>
+    <tr>
+        <td>借用人</td>
+        <td>{{.data.BookingUserName}}</td>
+    </tr>
+    <tr>
+        <td>电话</td>
+        <td>{{.data.BookingUserTel}}</td>
+    </tr>
+    <tr>
+        <td>活动内容</td>
+        <td>{{.data.BookingContent}}</td>
+    </tr>
+    <tr>
+        <td>活动人数</td>
+        <td>{{.data.BookingUseNum}}</td>
+    </tr>
+    <tr>
+        <td>活动组织</td>
+        <td>{{.data.BookingOrg}}</td>
+    </tr>
+    <tr>
+        <td>当前状态</td>
+        <td>
+        {{if eq .data.BookingStatus 0}}
+            未审核
+        {{else if eq .data.BookingStatus 1}}
+            审核通过
+        {{else}}
+            审核不通过
+        {{end}}
+        </td>
+    </tr>
+    <tr>
+        <td>借用教室</td>
+        <td>{{.data.Room.Name}}</td>
+    </tr>
+    <tr>
+        <td>借用日期</td>
+        <td>{{.data.Date}}</td>
+    </tr>
+    <tr>
+        <td>其他扩展</td>
+        <td>{{.data.BookingExt}}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+</html>

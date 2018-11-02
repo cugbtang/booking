@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+</head>
+
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">预约管理</a>
+        <a>
+          <cite>预约管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<table id="demo" lay-filter="test"></table>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="pass">通过</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="refuse">拒绝</a>
+    <a class="layui-btn layui-btn-xs" lay-event="detail">详细</a>
+</script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table
+                , $ = layui.jquery
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            var status
+            var id = data.BookingId
+            if (obj.event === 'pass') {
+                status = 1
+                $.post("/booking/option", {id: id, status: status}, function (res) {
+                    layer.msg(res.msg);
+                    table.reload("demo")
+                })
+            } else if (obj.event === 'refuse') {
+                status = 2
+                $.post("/booking/option", {id: id, status: status}, function (res) {
+                    layer.msg(res.msg);
+                    table.reload("demo")
+                })
+            } else {
+                layer.open({
+                    type: 2,
+                    area: ["500" + 'px', "300" + 'px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    shadeClose: true,
+                    shade: 0.4,
+                    title: "详情",
+                    content: "/booking/detail/" + id
+                });
+            }
+
+        });
+        table.render({
+            elem: '#demo'
+            , height: 500
+            , url: '/booking/get' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'BookingId', title: 'ID', width: 80, sort: true, fixed: 'left'}
+                , {field: 'BookingContent', title: '活动内容', width: 200}
+                , {field: 'BookingOrg', title: '组织', width: 100, sort: true}
+                , {field: 'BookingUserName', title: '借用人', width: 80}
+                , {field: 'BookingUserTel', title: '电话', width: 100}
+                , {field: 'RoomName', title: '教室', width: 100, sort: true}
+                , {field: 'Date', title: '借用时间', width: 200, sort: true}
+                , {
+                    title: '状态', width: 200, sort: true, templet: function (d) {
+                        if (d.BookingStatus == 0) {
+                            return "<span>未审核</span>"
+                        } else if (d.BookingStatus == 1) {
+                            return "<span style='color:red'>审核通过</span>"
+                        } else {
+                            return "<span style='color:gray'>审核未通过</span>"
+                        }
+                    }
+                }
+                , {fixed: 'right', title: '操作', width: 200, sort: true, toolbar: '#barDemo'}
+            ]]
+        });
+        form = layui.form;
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教室借用</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap-table-master/dist/bootstrap-table.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar"
+                    aria-controls="bs-navbar" aria-expanded="false">
+                <span class="sr-only">CAUC</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../" class="navbar-brand">CAUC</a>
+        </div>
+        <nav id="bs-navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/booking/new">借教室</a>
+                </li>
+                <li>
+                    <a href="/booking/list">借用列表</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="bs-docs-header" id="content" tabindex="-1">
+    <div class="container">
+        <h1>借用列表</h1>
+        <p>所有的借用申请都会在这里显示，供大家查询</p>
+    </div>
+</div>
+<div class="container">
+    <table id="table"></table>
+</div>
+<style>
+    .bs-docs-header {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        font-size: 24px;
+        text-align: left;
+    }
+
+    .bs-docs-header {
+        font-size: 20px;
+    }
+
+    .bs-docs-header h1 {
+        margin-top: 0;
+        color: #fff;
+    }
+
+    .bs-docs-header {
+        position: relative;
+        padding: 30px 0;
+        color: #cdbfe3;
+        text-align: left;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+        background-color: #6f5499;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#563d7c), to(#6f5499));
+        background-image: -webkit-linear-gradient(top, #563d7c 0, #6f5499 100%);
+        background-image: -o-linear-gradient(top, #563d7c 0, #6f5499 100%);
+        background-image: linear-gradient(to bottom, #563d7c 0, #6f5499 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#563d7c', endColorstr='#6F5499', GradientType=0);
+        background-repeat: repeat-x;
+    }
+
+    .navbar {
+        margin-bottom: 0;
+    }
+
+    .bs-docs-nav .navbar-toggle .icon-bar {
+        background-color: #563d7c;
+    }
+</style>
+<script type="text/javascript" src="/static/bootstrap/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-table-master/dist/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-table-master/dist/locale/bootstrap-table-zh-CN.min.js"></script>
+<script>
+    var $table;
+    //初始化bootstrap-table的内容
+    //记录页面bootstrap-table全局变量$table，方便应用
+    var queryUrl = '/booking/get_list'
+    $table = $('#table').bootstrapTable({
+        url: queryUrl,                      //请求后台的URL（*）
+        method: 'GET',                      //请求方式（*）
+        toolbar: '#toolbar',              //工具按钮用哪个容器
+        // striped: true,                      //是否显示行间隔色
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: true,                   //是否显示分页（*）
+        // sortable: true,                     //是否启用排序
+        // sortOrder: "asc",                   //排序方式
+        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+        pageSize: 10,                     //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        // search: false,                      //是否显示表格搜索
+        strictSearch: true,
+        showColumns: true,                  //是否显示所有的列（选择显示的列）
+        showRefresh: true,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        clickToSelect: true,                //是否启用点击选中行
+        //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+        uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+        // showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+        cardView: false,                    //是否显示详细视图
+        detailView: false,                  //是否显示父子表
+        //得到查询的参数
+        queryParams: function (params) {
+            //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+            var temp = {
+                rows: params.limit,                         //页面大小
+                page: (params.offset / params.limit) + 1,   //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order //排位命令（desc，asc）
+            };
+            return temp;
+        },
+        columns: [{
+            field: 'BookingOrg',
+            title: '借用组织',
+            sortable: true
+        }, {
+            field: 'BookingUserName',
+            title: '借用人',
+            sortable: true
+        }, {
+            field: 'RoomName',
+            title: '借用地点',
+            sortable: true
+        }, {
+            field: 'Date',
+            title: '借用时间',
+            sortable: true
+        }, {
+            field: 'BookingStatus',
+            title: '当前状态',
+            formatter: statusFormatter
+        },],
+        onLoadSuccess: function () {
+        },
+        onLoadError: function () {
+            showTips("数据加载失败！");
+        },
+        onDblClickRow: function (row, $element) {
+            var id = row.ID;
+            EditViewById(id, 'view');
+        },
+    });
+
+    //状态的格式化
+    function statusFormatter(value, row, index) {
+        if (value == 0) {
+            return "<span>未审核</span>"
+        } else if (value == 1) {
+            return "<span style='color:red'>已通过</span>"
+        } else {
+            return "<span style='color:gray'>未通过</span>"
+        }
+    }
+</script>
+</body>
+</html>

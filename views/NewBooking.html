@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教室借用</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar"
+                    aria-controls="bs-navbar" aria-expanded="false">
+                <span class="sr-only">CAUC</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../" class="navbar-brand">CAUC</a>
+        </div>
+        <nav id="bs-navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/booking/new">借教室</a>
+                </li>
+                <li>
+                    <a href="/booking/list">借用列表</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="bs-docs-header" id="content" tabindex="-1">
+    <div class="container">
+        <h1>借用申请</h1>
+        <p>请正确的填写各项信息</p>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <h1 class="h1">借用单</h1>
+            <form id="use">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="org">借用组织</label>
+                            <input type="text" class="form-control" id="org" name="org" placeholder="请输入组织名称">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="num">大约人数</label>
+                            <input type="text" class="form-control" id="num" name="num" placeholder="请输入大概人数">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">借用人</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="请输入借用人">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tel">借用人电话</label>
+                            <input type="tel" class="form-control" id="tel" name="tel" placeholder="请输入电话号码">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="name">教室</label>
+                            <select id="room_id" class="form-control" name="room_id">
+                                <option>请选择教室</option>
+                            {{range $index, $elem := .RoomList}}
+                                <option value="{{$elem.RoomId}}">{{$elem.Name}}</option>
+                            {{end}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="use_date">请选择日期</label>
+                            <input type="text" class="form-control" id="use_date" name="use_date" placeholder="请选择日期">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="use_type">请选择时间段</label>
+                            <select id="use_type" class="form-control" name="use_type">
+                                <option>请选择借用时间段</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="content">活动内容</label>
+                            <textarea class="form-control" name="content" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            {{range $index, $elem := .DesignList}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="{{$elem.Key}}">{{$elem.Name}}</label>
+                            <input type="text" class="form-control" id="{{$elem.Key}}" name="{{$elem.Key}}"
+                                   placeholder="请输入{{$elem.Name}}">
+                        </div>
+                    </div>
+                </div>
+            {{end}}
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<style>
+    .clear {
+        height: 100px;
+    }
+
+    .bs-docs-header {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        font-size: 24px;
+        text-align: left;
+    }
+
+    .bs-docs-header {
+        font-size: 20px;
+    }
+
+    .bs-docs-header h1 {
+        margin-top: 0;
+        color: #fff;
+    }
+
+    .bs-docs-header {
+        position: relative;
+        padding: 30px 0;
+        color: #cdbfe3;
+        text-align: left;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+        background-color: #6f5499;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#563d7c), to(#6f5499));
+        background-image: -webkit-linear-gradient(top, #563d7c 0, #6f5499 100%);
+        background-image: -o-linear-gradient(top, #563d7c 0, #6f5499 100%);
+        background-image: linear-gradient(to bottom, #563d7c 0, #6f5499 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#563d7c', endColorstr='#6F5499', GradientType=0);
+        background-repeat: repeat-x;
+    }
+
+    .navbar {
+        margin-bottom: 0;
+    }
+
+    .bs-docs-nav .navbar-toggle .icon-bar {
+        background-color: #563d7c;
+    }
+</style>
+<script type="text/javascript" src="/static/bootstrap/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript"
+        src="/static/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script>
+    $('#use_date').datetimepicker({
+        language: 'zh-CN',//显示中文
+        format: 'yyyy-mm-dd',//显示格式
+        minView: "month",//设置只显示到月份
+        initialDate: new Date(),
+        autoclose: true,//选中自动关闭
+        todayBtn: true,//显示今日按钮*/
+    });
+    $('#use_date').on("change", function () {
+        id = $("#room_id option:selected").val();
+        date = $("#use_date").val();
+        $.post("/booking/time", {room_id: id, date: date}, function (res) {
+            $("#use_type").empty()
+            $("#use_type").append("<option>请选择</option>")
+            for (var i = 0; i < res.data.length; i++) {
+                $("#use_type").append("<option value=" + res.data[i].type + ">" + res.data[i].str + "</option>")
+            }
+        })
+    })
+    $("#use").on("submit", function () {
+        data = $("#use").serialize()
+        $.post("/booking/add", data, function (res) {
+            if (res.staus == 1) {
+                alert("申请成功，请等待审核")
+            } else {
+                alert(res.msg)
+            }
+        })
+        return false
+    })
+</script>
+</body>
+</html>
